@@ -37,7 +37,7 @@ def _normalize_db_url(url: str) -> str:
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-me")
-    DATABASE_URL = _normalize_db_url(os.environ.get("DATABASE_URL", ""))
+    DATABASE_URL = _normalize_db_url(os.environ.get("DATABASE_URL", "postgresql://arcade_hub_db_005a_user:1eFI2CcvxvhXrdzMiTh8y9Ap2l8jdhIo@dpg-d876pqt7vvec738o5r10-a/arcade_hub_db_005a"))
     SQLALCHEMY_DATABASE_URI = DATABASE_URL or f"sqlite:///{os.path.join(BASE_DIR, 'cybercafe.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
