@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Receive Documents · {{ c.full_name }}{% endblock %}
+{% block content %}
+<div class="grid lg:grid-cols-2 gap-6">
+  <div class="card-3d p-6">
+    <h1 class="text-2xl font-extrabold h-display">Receive documents from <span class="h-shine">{{ c.full_name }}</span></h1>
+    <p class="text-sm text-slate-600 mt-1">Ask the customer to scan this QR with their phone camera — or use the quick-share buttons below to send the upload link straight to their phone. Every file the customer sends will auto-download to <b>your device</b> and be saved permanently on this customer's profile.</p>
+
+    <div class="mt-6 flex flex-col items-center">
+      <div class="rounded-2xl bg-white p-4 shadow-glow ring-1 ring-slate-200">
+        <img src="{{ qr_url }}" alt="QR" class="w-64 h-64"/>
+      </div>
+      <div class="mt-3 text-xs text-slate-500 break-all max-w-xs text-center" id="lvLink">{{ upload_url }}</div>
+    </div>
+
+    {# === Quick share — send the QR link directly to the customer === #}
+    <div class="mt-5">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-slate-700">⚡ Quick share with customer</h3>
+        {% if c.mobile_number %}
+          <span class="pill pill-violet">📞 {{ c.mobile_number }}</span>
+        {% else %}
+          <span class="pill pill-amber">No mobile saved</span>
+        {% endif %}
+      </div>
+
+      <div class="share-grid">
+        <button type="button" class="share-btn wa" id="shareWa">
+          <span class="em">💬</span><span>WhatsApp</span>
+        </button>
+        <button type="button" class="share-btn sms" id="shareSms">
+          <span class="em">✉️</span><span>SMS</span>
+        </button>
+        <a class="share-btn tel" href="tel:{{ c.mobile_number or '' }}" {% if not c.mobile_number %}onclick="event.preventDefault();LV.toast('No phone number','Add a mobile number on the customer profile to call directly.','danger');return false;"{% endif %}>
+          <span class="em">📞</span><span>Call</span>
+        </a>
+        <button type="button" class="share-btn cp" id="shareCopy">
+          <span class="em">🔗</span><span>Copy link</span>
+        </button>
+      </div>
+
+      <button type="button" id="shareNative"
+              class="mt-3 w-full btn-3d teal">
+        📲 Share via any app on this device
+      </button>
+      <p class="text-[11px] text-slate-500 mt-2 text-center">The customer just opens the link and uploads their documents — no app to install.</p>
+    </div>
+
+    <div class="mt-6 flex gap-2">
+      <a href="{{ url_for('customer.view', cid=c.id) }}" class="btn-ghost">← Back</a>
+      <button id="endBtn" class="btn-3d rose">End session</button>
+    </div>
+  </div>
+
+  <div class="card-3d p-6">
+    <div class="flex items-center justify-between">
+      <h2 class="font-bold text-lg">📥 Incoming files</h2>
+      <span id="dot" class="inline-flex items-center gap-2 text-xs text-emerald-600">
+        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> Waiting…
+      </span>
+    </div>
+    <ul id="received" class="mt-4 space-y-2 text-sm"></ul>
+    <p id="empty" class="text-slate-400 text-sm mt-4">No files yet. They will appear and download here automatically.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const token = "{{ token }}";
+const cid = {{ c.id }};
+const list = document.getElementById('received');
+const empty = document.getElementById('empty');
+const uploadUrl = {{ upload_url|tojson }};
+const customerName = {{ c.full_name|tojson }};
+const customerPhone = {{ (c.mobile_number or '')|tojson }};
+const shareMsg = "Hi " + customerName + ", please upload your documents securely here: " + uploadUrl;
+
+function normalizePhone(p){
+  if(!p) return '';
+  let s = String(p).replace(/[^0-9+]/g,'');
+  // If user stored a 10-digit Indian number, prefix +91 for WhatsApp/SMS deep-links
+  if (s.length === 10) s = '91' + s;
+  if (s.startsWith('+')) s = s.slice(1);
+  return s;
+}
+
+document.getElementById('shareWa').onclick = () => {
+  const ph = normalizePhone(customerPhone);
+  const base = ph ? ('https://wa.me/' + ph + '?text=') : 'https://wa.me/?text=';
+  window.open(base + encodeURIComponent(shareMsg), '_blank');
+};
+document.getElementById('shareSms').onclick = () => {
+  if(!customerPhone){ LV.toast('No phone number','Add a mobile number on the customer profile to send an SMS.','danger'); return; }
+  window.location.href = 'sms:' + customerPhone + '?body=' + encodeURIComponent(shareMsg);
+};
+document.getElementById('shareCopy').onclick = async () => {
+  try { await navigator.clipboard.writeText(uploadUrl); LV.toast('Link copied','Paste it anywhere to share with the customer.','success'); }
+  catch(e){ LV.toast('Copy failed','Long-press the link below the QR to copy.','danger'); }
+};
+document.getElementById('shareNative').onclick = async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: 'Upload documents', text: shareMsg, url: uploadUrl }); }
+    catch(_) {}
+  } else {
+    try { await navigator.clipboard.writeText(uploadUrl);
+          LV.toast('Link copied','Your browser doesn\u2019t support native share — link copied instead.','info'); }
+    catch(e){ LV.toast('Share unavailable','Use WhatsApp or SMS buttons above.','danger'); }
+  }
+};
+
+async function poll() {
+  try {
+    const r = await fetch(`/customers/${cid}/handoff/${token}/poll`);
+    if (!r.ok) { document.getElementById('dot').innerHTML = '<span class="h-2 w-2 rounded-full bg-rose-500"></span> Session expired'; return; }
+    const j = await r.json();
+    for (const f of (j.files || [])) {
+      empty.classList.add('hidden');
+      const blob = b64ToBlob(f.data_b64, f.mime);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = customerName.replace(/\s+/g,'_') + '_' + f.name; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+      const li = document.createElement('li');
+      li.className = 'flex items-center justify-between bg-white/85 border rounded-xl px-3 py-2';
+      const ts = new Date().toLocaleTimeString();
+      li.innerHTML = `<span class="truncate">📥 ${f.name} <span class="text-xs text-slate-400">${(f.size/1024).toFixed(0)} KB · ${ts}</span></span>
+                      <a class="text-indigo-600 text-xs" href="${url}" download="${f.name}">Save again</a>`;
+      list.prepend(li);
+    }
+  } catch (e) {}
+  setTimeout(poll, 2000);
+}
+function b64ToBlob(b64, mime) {
+  const bin = atob(b64); const len = bin.length; const u8 = new Uint8Array(len);
+  for (let i=0;i<len;i++) u8[i] = bin.charCodeAt(i);
+  return new Blob([u8], { type: mime });
+}
+document.getElementById('endBtn').onclick = async () => {
+  await fetch(`/customers/${cid}/handoff/${token}/end`, {method:'POST'});
+  window.location = "{{ url_for('customer.view', cid=c.id) }}";
+};
+poll();
+</script>
+{% endblock %}

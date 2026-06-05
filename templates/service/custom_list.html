@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}My Services{% endblock %}
+{% block content %}
+<div class="flex items-end justify-between flex-wrap gap-2 mb-6">
+  <div>
+    <h1 class="text-3xl font-extrabold h-display">🛠️ My Custom Services</h1>
+    <p class="text-slate-600 text-sm mt-1">Add your own services and set their prices. They will appear on your dashboard quick-grid.</p>
+  </div>
+  <a href="{{ url_for('export.new_custom') }}" class="btn-3d">+ Add Service</a>
+</div>
+
+<div class="card-3d p-5">
+  {% if items %}
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="text-left text-xs uppercase tracking-wider text-slate-500">
+        <tr><th class="py-2">Icon</th><th>Name (EN)</th><th>Name (HI)</th><th>Category</th><th>Price ₹</th><th>Active</th><th class="text-right">Actions</th></tr>
+      </thead>
+      <tbody class="divide-y">
+      {% for s in items %}
+        <tr>
+          <td class="py-2 text-2xl">{{ s.emoji }}</td>
+          <td class="font-semibold">{{ s.name_en }}</td>
+          <td>{{ s.name_hi or '—' }}</td>
+          <td><span class="pill pill-indigo">{{ s.category }}</span></td>
+          <td class="font-bold text-emerald-700">₹{{ '%.0f' % s.fee }}</td>
+          <td>{% if s.is_active %}<span class="pill pill-green">Active</span>{% else %}<span class="pill pill-rose">Off</span>{% endif %}</td>
+          <td class="text-right">
+            <a href="{{ url_for('export.edit_custom', cid=s.id) }}" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100">Edit</a>
+            <form action="{{ url_for('export.delete_custom', cid=s.id) }}" method="post" class="inline" onsubmit="return confirm('Delete this service?')">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  {% else %}
+    <div class="text-center py-10 text-slate-500">No custom services yet. Add your first one with the button above.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="flex items-end justify-between flex-wrap gap-2 mb-6">
+  <div>
+    <h1 class="text-3xl font-extrabold h-display">Namaste, {{ current_user.full_name }} 🙏</h1>
+    <p class="text-slate-600 text-sm mt-1">नमस्ते! आज की कमाई और काम एक नज़र में देखें। <span class="text-slate-400">(Your shop at a glance.)</span></p>
+  </div>
+  <div class="flex gap-2 flex-wrap">
+    <a href="{{ url_for('customer.create') }}" class="btn-3d">+ नया ग्राहक / Customer</a>
+    <a href="{{ url_for('service.create') }}" class="btn-ghost">+ नई सेवा / Service</a>
+    <a href="{{ url_for('export.list_custom') }}" class="btn-ghost">🛠️ My Services</a>
+    {% if is_premium %}
+      <a href="{{ url_for('export.excel_all') }}" class="btn-3d" style="background:linear-gradient(135deg,#059669,#10b981)">⬇ Download Excel</a>
+    {% else %}
+      <a href="{{ url_for('premium.plans') }}" class="btn-ghost" title="Upgrade to download all history">⬇ Excel (Premium)</a>
+    {% endif %}
+    <a href="/guides" class="btn-ghost">📖 सहायता / Help</a>
+  </div>
+</div>
+
+<!-- Bihar quick-services tap grid (बिहार सेवाएँ) -->
+<div class="card-3d p-5 mb-6">
+  <div class="flex items-end justify-between flex-wrap gap-2 mb-3">
+    <div>
+      <h2 class="font-bold text-lg">⚡ बिहार सेवाएँ — एक टैप में बिल बनाएँ</h2>
+      <p class="text-xs text-slate-500">Tap any service below to start a new bill with the suggested fee pre-filled. Edit amount if needed.</p>
+    </div>
+    <input id="bsFilter" placeholder="🔍 सेवा खोजें / Search service…" class="input-3d max-w-xs"/>
+  </div>
+  {% for cat, items in bihar_groups %}
+    <div class="mt-4">
+      <div class="text-[11px] font-bold uppercase tracking-wider text-indigo-600 mb-2">{{ cat }}</div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 bs-grid">
+        {% for s in items %}
+          <a href="{{ url_for('service.create') }}?type={{ s.name_en|urlencode }}&amount={{ s.fee }}"
+             class="bs-tile group flex flex-col items-center justify-center text-center rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-300 p-3 transition shadow-sm"
+             data-name="{{ s.name_en|lower }} {{ s.name_hi }} {{ s.cat|lower }}">
+            <div class="text-2xl">{{ s.emoji }}</div>
+            <div class="font-bold text-[13px] mt-1 leading-tight text-slate-800">{{ s.name_hi }}</div>
+            <div class="text-[11px] text-slate-500">{{ s.name_en }}</div>
+            <div class="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">₹{{ s.fee }}</div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+  {% for icon,label,val,color in [
+    ('👥','कुल ग्राहक / Customers',total_customers,'text-indigo-600'),
+    ('💰',"आज की कमाई / Today", '₹%.2f' % today_earnings,'text-emerald-600'),
+    ('⏳','बकाया / Pending',pending,'text-amber-600'),
+    ('✅','पूरा / Completed',completed,'text-sky-600')
+  ] %}
+  <div class="stat">
+    <div class="flex items-center justify-between">
+      <div class="text-xs uppercase tracking-wider text-slate-500 font-semibold">{{ label }}</div>
+      <div class="text-2xl">{{ icon }}</div>
+    </div>
+    <div class="text-3xl font-extrabold mt-1 {{ color }}">{{ val }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="grid lg:grid-cols-3 gap-4 mt-6">
+  <div class="card-3d p-5 lg:col-span-2">
+    <h3 class="font-bold mb-3">📈 Daily Revenue (7 days)</h3>
+    <canvas id="dailyChart" height="120"></canvas>
+  </div>
+  <div class="card-3d p-5">
+    <h3 class="font-bold mb-3">🍩 Service Breakdown</h3>
+    <canvas id="bdChart" height="160"></canvas>
+  </div>
+  <div class="card-3d p-5 lg:col-span-2">
+    <h3 class="font-bold mb-3">📊 Monthly Revenue (6 months)</h3>
+    <canvas id="monthlyChart" height="120"></canvas>
+  </div>
+  <div class="card-3d p-5">
+    <h3 class="font-bold mb-2">⭐ Subscription</h3>
+    {% if subscription %}
+    <p class="text-sm">Plan: <b>{{ subscription.plan_name }}</b></p>
+    <p class="text-sm">Days left: <b>{{ subscription.days_left }}</b></p>
+    <p class="text-sm">Status:
+      <span class="pill {% if subscription.is_active %}pill-green{% else %}pill-rose{% endif %}">
+        {{ 'Active' if subscription.is_active else 'Inactive' }}
+      </span>
+    </p>
+    {% endif %}
+    <h3 class="font-bold mt-4 mb-2">🔔 Notifications</h3>
+    <ul class="text-sm space-y-1">
+      {% for n in notifications %}<li>• {{ n.title }}</li>
+      {% else %}<li class="text-slate-400">No notifications</li>{% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+const dl = {{ daily_labels|tojson }}, dv = {{ daily_values|tojson }};
+const ml = {{ monthly_labels|tojson }}, mv = {{ monthly_values|tojson }};
+const bl = {{ bd_labels|tojson }}, bv = {{ bd_values|tojson }};
+
+Chart.defaults.font.family = "'Plus Jakarta Sans', system-ui";
+Chart.defaults.color = '#475569';
+
+new Chart(document.getElementById('dailyChart'), {
+  type:'line',
+  data:{labels:dl, datasets:[{label:'₹', data:dv, borderColor:'#4f46e5',
+    backgroundColor:(ctx)=>{const c=ctx.chart.ctx.createLinearGradient(0,0,0,200);c.addColorStop(0,'rgba(79,70,229,.35)');c.addColorStop(1,'rgba(79,70,229,0)');return c;},
+    fill:true, tension:.35, borderWidth:3, pointRadius:4, pointBackgroundColor:'#4f46e5'}]},
+  options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+});
+new Chart(document.getElementById('monthlyChart'), {
+  type:'bar',
+  data:{labels:ml, datasets:[{label:'₹', data:mv,
+    backgroundColor:(ctx)=>{const c=ctx.chart.ctx.createLinearGradient(0,0,0,200);c.addColorStop(0,'#34d399');c.addColorStop(1,'#059669');return c;},
+    borderRadius:8}]},
+  options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+});
+new Chart(document.getElementById('bdChart'), {
+  type:'doughnut',
+  data:{labels:bl, datasets:[{data:bv, backgroundColor:['#6366f1','#10b981','#f59e0b','#ef4444','#06b6d4','#d946ef'], borderWidth:3, borderColor:'#fff'}]},
+  options:{plugins:{legend:{position:'bottom', labels:{boxWidth:10}}}}
+});
+
+// Bihar quick-service live filter
+const _bsf = document.getElementById('bsFilter');
+if (_bsf) _bsf.addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('.bs-tile').forEach(el => {
+    el.style.display = !q || el.dataset.name.includes(q) ? '' : 'none';
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <a href="{{ url_for('export.list_custom') }}" class="text-sm text-slate-500">← Back</a>
+  <h1 class="text-2xl font-extrabold mt-2">{{ title }}</h1>
+  <form method="post" class="card-3d p-5 mt-4 grid sm:grid-cols-2 gap-4">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div>
+      <label class="text-sm font-semibold">Name (English) *</label>
+      <input name="name_en" required maxlength="120" value="{{ item.name_en if item else '' }}" class="input-3d w-full mt-1"/>
+    </div>
+    <div>
+      <label class="text-sm font-semibold">Name (Hindi)</label>
+      <input name="name_hi" maxlength="120" value="{{ item.name_hi if item else '' }}" class="input-3d w-full mt-1"/>
+    </div>
+    <div>
+      <label class="text-sm font-semibold">Category</label>
+      <input name="category" maxlength="60" value="{{ item.category if item else 'Custom' }}" class="input-3d w-full mt-1"/>
+    </div>
+    <div>
+      <label class="text-sm font-semibold">Emoji</label>
+      <input name="emoji" maxlength="8" value="{{ item.emoji if item else '🛠️' }}" class="input-3d w-full mt-1"/>
+    </div>
+    <div>
+      <label class="text-sm font-semibold">Price (₹) *</label>
+      <input name="fee" type="number" step="0.01" min="0" required value="{{ '%.2f' % item.fee if item else '0.00' }}" class="input-3d w-full mt-1"/>
+    </div>
+    <div class="flex items-center mt-6">
+      <label class="text-sm font-semibold inline-flex items-center gap-2">
+        <input type="checkbox" name="is_active" {% if (item and item.is_active) or not item %}checked{% endif %}/>
+        Show on dashboard
+      </label>
+    </div>
+    <div class="sm:col-span-2 flex justify-end gap-2 pt-2">
+      <a href="{{ url_for('export.list_custom') }}" class="btn-ghost">Cancel</a>
+      <button class="btn-3d">Save</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

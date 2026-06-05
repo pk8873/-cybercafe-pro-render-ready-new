@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}All Form Guides — FormSathi{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-6xl px-4 py-14">
+  <h1 class="font-display text-4xl font-extrabold md:text-5xl">All form guides</h1>
+  <p class="mt-3 text-muted-foreground">Browse step-by-step guides for every popular Indian government form.</p>
+
+  <form method="get" class="mt-8 flex flex-wrap items-center gap-3">
+    <div class="relative flex-1 min-w-[240px]">
+      <input name="q" value="{{q}}" placeholder="Search forms (e.g. passport, PAN)…" class="input pl-9" />
+      <span class="absolute left-3 top-2.5 text-muted-foreground">🔍</span>
+    </div>
+    <select name="cat" class="input max-w-[200px]">
+      {% for c in categories %}<option value="{{c}}" {% if c==cat %}selected{% endif %}>{{c}}</option>{% endfor %}
+    </select>
+    <button class="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground">Filter</button>
+  </form>
+
+  <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {% for g in guides %}
+    <a href="/guides/{{g.slug}}" class="group flex flex-col rounded-2xl border border-border bg-card-gradient p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-pop">
+      <div class="flex items-center justify-between">
+        <span class="grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-2xl">{{g.emoji}}</span>
+        <span class="rounded-full bg-secondary px-2.5 py-1 text-[11px] font-medium text-secondary-foreground">{{g.category}}</span>
+      </div>
+      <h3 class="mt-4 font-display text-lg font-bold leading-snug">{{g.name}}</h3>
+      <p class="mt-1.5 line-clamp-3 text-sm text-muted-foreground">{{g.summary}}</p>
+      <div class="mt-4 flex flex-wrap gap-2 text-[11px] text-muted-foreground">
+        <span class="rounded-md bg-muted px-2 py-1">⏱ {{g.durationMins}} min</span>
+        <span class="rounded-md bg-muted px-2 py-1">{{g.difficulty}}</span>
+        <span class="rounded-md bg-muted px-2 py-1">{{g.feeINR}}</span>
+      </div>
+    </a>
+    {% else %}
+    <p class="text-muted-foreground">No guides match your search.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

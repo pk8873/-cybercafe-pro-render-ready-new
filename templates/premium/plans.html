@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Premium Plans{% endblock %}
+{% block content %}
+<div class="mb-6">
+  <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-fuchsia-600 to-indigo-600 bg-clip-text text-transparent">Upgrade to Premium</h1>
+  <p class="text-slate-600 mt-1">Pay securely via UPI. Your subscription activates after payment verification.</p>
+  <p class="text-xs text-slate-500 mt-1">Payments are received at UPI: <b>{{ upi_id }}</b> ({{ payee }})</p>
+  <div class="mt-3">
+    <a href="{{ url_for('premium.my_payments') }}" class="btn-ghost text-sm">View my payments →</a>
+  </div>
+</div>
+
+<div class="grid md:grid-cols-3 gap-5">
+  {% for p in plans %}
+  <div class="card-3d tilt p-6 rounded-2xl bg-white/70 border border-white/60 shadow-sm">
+    <div class="text-xs font-semibold tracking-widest text-fuchsia-600 uppercase">{{ p.key }}</div>
+    <h3 class="text-xl font-bold mt-1">{{ p.name }}</h3>
+    <div class="mt-3"><span class="text-4xl font-black">₹{{ '%.0f' % p.amount }}</span> <span class="text-slate-500 text-sm">/ {{ p.days }} days</span></div>
+    <ul class="mt-4 space-y-1 text-sm text-slate-700">
+      {% for f in p.features %}<li>✓ {{ f }}</li>{% endfor %}
+    </ul>
+    <a href="{{ url_for('premium.buy', plan_key=p.key) }}" class="btn-3d mt-5 inline-block w-full text-center">Buy Now</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

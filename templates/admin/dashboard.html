@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% set hide_nav = true %}
+{% block title %}Admin Command Center{% endblock %}
+{% block content %}
+<style>
+  .ac-stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(1200px 800px at 15% 0%,#1e1b4b 0%,transparent 55%),radial-gradient(1000px 700px at 100% 100%,#0c4a6e 0%,transparent 55%),radial-gradient(800px 600px at 50% 50%,#831843 0%,transparent 60%),#04050d;z-index:0}
+  .ac-stage::before{content:"";position:absolute;width:80vmax;height:80vmax;border-radius:50%;background:conic-gradient(from 0deg,#6366f1,#a855f7,#ec4899,#06b6d4,#6366f1);filter:blur(140px);opacity:.35;top:-30vmax;left:-20vmax;animation:spin 40s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ac-mesh{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse at center,#000 20%,transparent 80%)}
+  .ac-wrap{position:relative;z-index:1;padding:32px;max-width:1400px;margin:0 auto;perspective:1800px}
+  .ac-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+  .ac-title{font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,#fff,#c7d2fe 50%,#f9a8d4);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+  .ac-sub{color:#94a3b8;font-size:13px;margin-top:6px;letter-spacing:.5px}
+  .ac-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.4);color:#a5b4fc;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+  .ac-dot{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 12px #10b981;animation:pulseG 2s infinite}
+  @keyframes pulseG{50%{opacity:.5}}
+  .ac-logout{padding:10px 22px;border-radius:14px;background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(236,72,153,.2));border:1px solid rgba(239,68,68,.4);color:#fecaca;font-weight:600;font-size:13px;text-decoration:none;transition:all .3s;backdrop-filter:blur(12px)}
+  .ac-logout:hover{transform:translateY(-2px);box-shadow:0 12px 30px -8px rgba(239,68,68,.5);background:linear-gradient(135deg,#ef4444,#ec4899);color:#fff}
+  .ac-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-bottom:36px}
+  .ac-stat{position:relative;padding:26px;border-radius:24px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(20px);overflow:hidden;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s}
+  .ac-stat::before{content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(168,85,247,.18),transparent 40%);opacity:0;transition:opacity .4s}
+  .ac-stat:hover::before{opacity:1}
+  .ac-stat:hover{transform:translateY(-6px) rotateX(4deg);box-shadow:0 30px 60px -20px rgba(99,102,241,.4)}
+  .ac-stat-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#a5b4fc;margin-bottom:14px}
+  .ac-stat-val{font-size:44px;font-weight:900;background:linear-gradient(135deg,#fff,#c7d2fe);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+  .ac-stat-icon{position:absolute;top:20px;right:20px;width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:linear-gradient(135deg,#6366f1,#a855f7);box-shadow:0 10px 25px -8px rgba(168,85,247,.6)}
+  .ac-stat:nth-child(2) .ac-stat-icon{background:linear-gradient(135deg,#06b6d4,#3b82f6)}
+  .ac-stat:nth-child(3) .ac-stat-icon{background:linear-gradient(135deg,#ec4899,#f43f5e)}
+  .ac-panel{position:relative;border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(24px);overflow:hidden;box-shadow:0 30px 80px -20px rgba(0,0,0,.6)}
+  .ac-panel-head{padding:22px 28px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}
+  .ac-panel-title{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.3px}
+  .ac-table{width:100%;border-collapse:collapse;color:#e2e8f0;font-size:14px}
+  .ac-table thead th{padding:16px 20px;text-align:left;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#94a3b8;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.08)}
+  .ac-table tbody tr{border-bottom:1px solid rgba(255,255,255,.05);transition:background .25s}
+  .ac-table tbody tr:hover{background:rgba(168,85,247,.06)}
+  .ac-table td{padding:16px 20px}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+  .pill-admin{background:linear-gradient(135deg,#ef4444,#ec4899);color:#fff;box-shadow:0 4px 12px -2px rgba(236,72,153,.5)}
+  .pill-on{background:rgba(16,185,129,.18);color:#6ee7b7;border:1px solid rgba(16,185,129,.35)}
+  .pill-off{background:rgba(148,163,184,.15);color:#cbd5e1;border:1px solid rgba(148,163,184,.3)}
+  .ac-action{padding:7px 14px;border-radius:10px;font-size:12px;font-weight:600;border:1px solid rgba(99,102,241,.4);background:rgba(99,102,241,.12);color:#c7d2fe;cursor:pointer;transition:all .25s}
+  .ac-action:hover{background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;transform:translateY(-1px);box-shadow:0 8px 20px -6px rgba(168,85,247,.6)}
+  .table-wrap{overflow-x:auto}
+  body{overflow-x:hidden}
+</style>
+<div class="ac-stage"><div class="ac-mesh"></div></div>
+<div class="ac-wrap">
+  <div class="ac-header">
+    <div>
+      <div class="ac-badge"><span class="ac-dot"></span> System Online</div>
+      <h1 class="ac-title">Command Center</h1>
+      <p class="ac-sub">Real-time control over your Cyber Cafe ERP universe</p>
+    </div>
+    <a href="{{ url_for('premium.admin_list') }}" class="ac-logout" style="background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(236,72,153,.25));border-color:rgba(168,85,247,.5);color:#f5d0fe">★ Premium Payments</a>
+    <a href="{{ url_for('admin.logout') }}" class="ac-logout">⎋ Sign Out</a>
+  </div>
+
+  <div class="ac-grid">
+    {% set icons = {'users':'👥','customers':'🧾','services':'⚙️'} %}
+    {% for k,v in stats.items() %}
+    <div class="ac-stat tilt">
+      <div class="ac-stat-icon">{{ icons.get(k,'📊') }}</div>
+      <div class="ac-stat-label">{{ k }}</div>
+      <div class="ac-stat-val">{{ v }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="ac-panel">
+    <div class="ac-panel-head">
+      <div class="ac-panel-title">Registered Operators</div>
+      <span style="font-size:12px;color:#94a3b8">{{ users|length }} total</span>
+    </div>
+    <div class="table-wrap">
+    <table class="ac-table">
+      <thead><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Shop</th><th>Password</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+      {% for u in users %}
+        <tr>
+          <td><strong style="color:#fff">{{ u.full_name }}</strong>{% if u.is_admin %} <span class="pill pill-admin">Admin</span>{% endif %}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.mobile_number }}</td>
+          <td>{{ u.shop_name or '—' }}</td>
+          <td><code style="background:rgba(255,255,255,.08);padding:3px 8px;border-radius:6px;color:#fde68a;font-family:monospace;font-size:12px">{{ u.password_plain or '—' }}</code></td>
+          <td><span class="pill {{ 'pill-on' if u.is_active else 'pill-off' }}">{{ 'Active' if u.is_active else 'Disabled' }}</span></td>
+          <td>
+            <form action="{{ url_for('admin.toggle_user', uid=u.id) }}" method="post" style="margin:0">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button class="ac-action">{{ 'Disable' if u.is_active else 'Enable' }}</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.tilt').forEach(el=>{
+  el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px');});
+});
+</script>
+{% endblock %}

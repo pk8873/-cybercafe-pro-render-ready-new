@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% set hide_nav = true %}
+{% block title %}Secure Admin Access{% endblock %}
+{% block content %}
+<style>
+  .admin-stage{position:fixed;inset:0;overflow:hidden;background:radial-gradient(1200px 800px at 20% 10%,#1e1b4b 0%,transparent 60%),radial-gradient(1000px 700px at 80% 90%,#831843 0%,transparent 55%),#05060f;z-index:0}
+  .admin-stage::before,.admin-stage::after{content:"";position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(120px);opacity:.55;animation:floatA 18s ease-in-out infinite}
+  .admin-stage::before{background:conic-gradient(from 0deg,#6366f1,#a855f7,#ec4899,#6366f1);top:-20vmax;left:-20vmax}
+  .admin-stage::after{background:conic-gradient(from 180deg,#06b6d4,#3b82f6,#a855f7,#06b6d4);bottom:-25vmax;right:-25vmax;animation-duration:22s;animation-direction:reverse}
+  @keyframes floatA{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(40px,-30px) rotate(180deg)}}
+  .grid-mesh{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);animation:meshMove 30s linear infinite}
+  @keyframes meshMove{to{background-position:60px 60px}}
+  .glass-card{position:relative;backdrop-filter:blur(24px) saturate(160%);background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.15);border-radius:28px;box-shadow:0 30px 80px -20px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.2);transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  .glass-card::before{content:"";position:absolute;inset:-1px;border-radius:28px;padding:1px;background:linear-gradient(135deg,#6366f1,#ec4899,#06b6d4,#6366f1);background-size:300% 300%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:borderShift 6s linear infinite;pointer-events:none}
+  @keyframes borderShift{to{background-position:300% 0}}
+  .neo-input{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 16px;color:#fff;font-size:15px;outline:none;transition:all .3s}
+  .neo-input:focus{border-color:#a855f7;box-shadow:0 0 0 4px rgba(168,85,247,.18),0 0 30px rgba(168,85,247,.35);transform:translateZ(10px)}
+  .neo-btn{position:relative;width:100%;padding:14px;border-radius:14px;font-weight:700;letter-spacing:.5px;color:#fff;background:linear-gradient(135deg,#ef4444,#ec4899,#8b5cf6);background-size:200% 200%;box-shadow:0 15px 40px -10px rgba(236,72,153,.6),inset 0 1px 0 rgba(255,255,255,.3);transition:all .35s;overflow:hidden}
+  .neo-btn:hover{background-position:100% 100%;transform:translateY(-2px) translateZ(20px);box-shadow:0 25px 50px -10px rgba(236,72,153,.8)}
+  .neo-btn::after{content:"";position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transition:left .6s}
+  .neo-btn:hover::after{left:150%}
+  .badge-shield{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#fca5a5;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
+  .pulse-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 0 rgba(239,68,68,.7);animation:pulse 1.6s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 12px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+  .holo-title{background:linear-gradient(135deg,#fff 0%,#c7d2fe 40%,#f9a8d4 70%,#fff 100%);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s ease-in-out infinite}
+  @keyframes shine{0%,100%{background-position:0 0}50%{background-position:100% 100%}}
+  .field-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#a5b4fc;margin-bottom:8px;display:block}
+  .admin-wrap{position:relative;z-index:1;min-height:90vh;display:flex;align-items:center;justify-content:center;padding:20px;perspective:1500px}
+  body{overflow-x:hidden}
+</style>
+<div class="admin-stage"><div class="grid-mesh"></div></div>
+<div class="admin-wrap">
+  <div class="glass-card p-10 w-full" style="max-width:440px" id="loginCard">
+    <div class="text-center mb-8">
+      <div class="badge-shield mb-5"><span class="pulse-dot"></span> Restricted Zone</div>
+      <h1 class="text-4xl font-black holo-title mb-2">Admin Control</h1>
+      <p class="text-sm text-slate-400">Authorized personnel only · End-to-end encrypted</p>
+    </div>
+    <form method="post" class="space-y-5">
+      {{ form.hidden_tag() }}
+      <div><label class="field-label">Email Address</label>{{ form.email(class_="neo-input", placeholder="admin@domain.com") }}</div>
+      <div><label class="field-label">Password</label>{{ form.password(class_="neo-input", placeholder="••••••••••••") }}</div>
+      <button type="submit" class="neo-btn">Authenticate →</button>
+    </form>
+    <div class="mt-6 pt-6 border-t border-white/10 text-center">
+      <p class="text-xs text-slate-500">Protected by rate-limit & CSRF · All access is logged</p>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const c=document.getElementById('loginCard');if(!c)return;
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`rotateY(${x*8}deg) rotateX(${-y*8}deg) translateZ(0)`;});
+  c.addEventListener('mouseleave',()=>c.style.transform='');
+})();
+</script>
+{% endblock %}

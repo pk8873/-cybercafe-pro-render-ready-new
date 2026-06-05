@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <a href="{{ url_for('customer.list_customers') }}" class="text-sm text-slate-500 hover:text-indigo-600">← Back to customers</a>
+  <div class="card-3d p-7 mt-3">
+    <h1 class="text-2xl font-extrabold h-display">{{ title }}</h1>
+    <p class="text-sm text-slate-500 mb-5">Fill in the customer details. Fields marked * are required.</p>
+    <form method="post" class="grid sm:grid-cols-2 gap-4">
+      {{ form.hidden_tag() }}
+
+      <div class="field sm:col-span-2">
+        <label>Full Name *</label>
+        {{ form.full_name(placeholder="e.g. Ramesh Kumar") }}
+        {% for e in form.full_name.errors %}<p class="text-xs text-rose-600 mt-1">{{ e }}</p>{% endfor %}
+      </div>
+      <div class="field">
+        <label>Mobile Number</label>
+        {{ form.mobile_number(placeholder="10-digit mobile") }}
+      </div>
+      <div class="field">
+        <label>Aadhaar Last 4</label>
+        {{ form.aadhaar_last_4(placeholder="1234", maxlength="4") }}
+      </div>
+      <div class="field">
+        <label>Village</label>
+        {{ form.village(placeholder="Village / town") }}
+      </div>
+      <div class="field">
+        <label>Address</label>
+        {{ form.address(placeholder="Street, area") }}
+      </div>
+      <div class="field sm:col-span-2">
+        <label>Notes</label>
+        {{ form.notes(placeholder="Anything else worth remembering…", rows="3") }}
+      </div>
+
+      <div class="sm:col-span-2 flex justify-end gap-2 pt-2">
+        <a href="{{ url_for('customer.list_customers') }}" class="btn-ghost">Cancel</a>
+        <button class="btn-3d success">💾 Save Customer</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

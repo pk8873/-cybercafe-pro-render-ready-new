@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}My Premium Payments{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-extrabold">My Premium Payments</h1>
+  <a href="{{ url_for('premium.plans') }}" class="btn-3d">Buy Premium</a>
+</div>
+{% if subscription %}
+<div class="mb-4 p-4 rounded-xl bg-white/70 border border-white/60 text-sm">
+  Current plan: <b>{{ subscription.plan_name }}</b> · Days left: <b>{{ subscription.days_left }}</b>
+</div>
+{% endif %}
+
+<div class="overflow-x-auto bg-white/70 rounded-xl border border-white/60">
+<table class="w-full text-sm">
+  <thead class="bg-slate-50 text-slate-600 text-xs uppercase">
+    <tr><th class="text-left p-3">Date</th><th class="text-left p-3">Plan</th><th class="text-left p-3">Amount</th><th class="text-left p-3">Txn Ref</th><th class="text-left p-3">Status</th></tr>
+  </thead>
+  <tbody>
+    {% for p in payments %}
+    <tr class="border-t">
+      <td class="p-3">{{ p.created_at.strftime('%d %b %Y %H:%M') }}</td>
+      <td class="p-3">{{ p.plan_name }}</td>
+      <td class="p-3">₹{{ '%.2f' % p.amount }}</td>
+      <td class="p-3 font-mono text-xs">{{ p.txn_ref }}</td>
+      <td class="p-3">
+        {% if p.status == 'approved' %}<span class="pill pill-green">Approved</span>
+        {% elif p.status == 'rejected' %}<span class="pill pill-rose">Rejected</span>
+        {% else %}<span class="pill">Pending</span>{% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td class="p-4 text-slate-500" colspan="5">No payments yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

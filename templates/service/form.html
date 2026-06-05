@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <a href="{{ url_for('service.list_services') }}" class="text-sm text-slate-500 hover:text-indigo-600">← वापस / Back to services</a>
+  <div class="card-3d p-7 mt-3">
+    <h1 class="text-2xl font-extrabold h-display">{{ title }}</h1>
+    <p class="text-sm text-slate-500 mb-5">अपने ग्राहक के लिए सेवा जोड़ें — <span class="text-slate-400">(Track a service for one of your customers.)</span></p>
+    <form method="post" class="grid sm:grid-cols-2 gap-4">
+      {{ form.hidden_tag() }}
+      <div class="field sm:col-span-2">
+        <label>ग्राहक चुनें / Customer *</label>
+        {{ form.customer_id() }}
+      </div>
+      <div class="field">
+        <label>सेवा / Service Type *</label>
+        {{ form.service_type(placeholder="e.g. Aay Praman Patra") }}
+      </div>
+      <div class="field">
+        <label>स्थिति / Status</label>
+        {{ form.status() }}
+      </div>
+      <div class="field sm:col-span-2">
+        <label>राशि / Amount (₹)</label>
+        {{ form.amount(placeholder="0.00", step="0.01") }}
+        <p class="text-xs text-slate-400 mt-1">Suggested fee already filled if you came from the quick grid. Edit if needed.</p>
+      </div>
+      <div class="field sm:col-span-2">
+        <label>नोट्स / Notes</label>
+        {{ form.notes(rows="3", placeholder="Any internal notes…") }}
+      </div>
+      <div class="sm:col-span-2 flex justify-end gap-2 pt-2">
+        <a href="{{ url_for('service.list_services') }}" class="btn-ghost">रद्द करें / Cancel</a>
+        <button class="btn-3d success">💾 सेव करें / Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

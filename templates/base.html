@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>{% block title %}CyberCafe ERP{% endblock %}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}"/>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<meta name="theme-color" content="#4f46e5"/>
+<link rel="icon" type="image/svg+xml" href="/static/icons/icon.svg"/>
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png"/>
+</head>
+<body class="bg-aurora text-slate-800 min-h-screen flex flex-col">
+<div class="orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+{% if not hide_nav %}
+<nav class="sticky top-0 z-30 glass border-b border-white/40">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <button id="pwa-install-btn" class="hidden mr-2 px-3 py-1.5 rounded-xl text-xs font-bold text-white shadow-md" style="background:linear-gradient(135deg,#4f46e5,#06b6d4)" title="Install app">⬇ Install App</button>
+    <a href="/guides" class="nav-link">Help Guides</a>
+      <a href="{{ url_for('public.home') }}" class="flex items-center gap-2 group">
+      <span class="h-9 w-9 grid place-items-center rounded-xl text-white font-black shadow-lg group-hover:scale-105 transition"
+            style="background:linear-gradient(135deg,#7c3aed,#06b6d4 60%,#14b8a6);">C</span>
+      <span class="text-lg font-extrabold tracking-tight h-shine">CyberCafe ERP</span>
+    </a>
+    <div class="flex items-center gap-1 text-sm">
+      {% if current_user.is_authenticated and not current_user.is_admin %}
+        <a href="{{ url_for('dashboard.index') }}" class="nav-link">Dashboard</a>
+        <a href="{{ url_for('customer.list_customers') }}" class="nav-link">Customers</a>
+        <a href="{{ url_for('service.list_services') }}" class="nav-link">Services</a>
+        <a href="{{ url_for('payment.list_payments') }}" class="nav-link">Payments</a>
+        <a href="{{ url_for('export.list_custom') }}" class="nav-link" title="Add / edit your own services & prices">🛠️ My Services</a>
+        <a href="{{ url_for('export.excel_all') }}" class="nav-link" title="Premium: download all history as Excel">⬇ Excel</a>
+        <a href="{{ url_for('premium.plans') }}" class="nav-link" style="color:#d946ef;font-weight:800;">★ Premium</a>
+        <a href="{{ url_for('auth.logout') }}" class="ml-2 btn-ghost">Logout</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="nav-link">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="ml-2 btn-3d">Get Started</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+{% endif %}
+
+<main class="flex-1 relative z-10">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    {% with msgs = get_flashed_messages(with_categories=true) %}
+      {% for cat, m in msgs %}
+        <div class="mb-3 px-4 py-2 rounded-xl text-sm shadow-sm border
+          {% if cat=='danger' %}bg-rose-50 border-rose-200 text-rose-800
+          {% elif cat=='success' %}bg-emerald-50 border-emerald-200 text-emerald-800
+          {% elif cat=='warning' %}bg-amber-50 border-amber-200 text-amber-800
+          {% else %}bg-sky-50 border-sky-200 text-sky-800{% endif %}">{{ m }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<footer class="relative z-10 mt-10 border-t border-white/40 glass">
+  <div class="max-w-7xl mx-auto px-4 py-5 text-xs text-slate-500 flex flex-wrap gap-2 justify-between">
+    <span>© 2025 CyberCafe ERP — Built for Indian cyber cafes</span>
+    <span>Made with ❤️ &amp; Flask</span>
+  </div>
+</footer>
+
+<div class="lv-toast-host" aria-live="polite"></div>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+let deferredPrompt = null;
+const installBtn = document.getElementById('pwa-install-btn');
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); deferredPrompt = e;
+  if (installBtn) installBtn.classList.remove('hidden');
+});
+if (installBtn) installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) { alert('To install: open this site in Chrome/Edge and use the browser menu → Install App / Add to Home Screen.'); return; }
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  installBtn.classList.add('hidden');
+});
+window.addEventListener('appinstalled', () => { if (installBtn) installBtn.classList.add('hidden'); });
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

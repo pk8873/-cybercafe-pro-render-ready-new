@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set hide_nav = true %}
+{% block title %}Premium Payments — Admin{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-extrabold">Premium Payments</h1>
+    <div class="flex gap-2 text-sm">
+      <a href="{{ url_for('admin.dashboard') }}" class="btn-ghost">← Admin Home</a>
+      <a href="{{ url_for('premium.admin_list') }}" class="btn-ghost {% if not status %}font-bold{% endif %}">All</a>
+      <a href="?status=pending" class="btn-ghost {% if status=='pending' %}font-bold{% endif %}">Pending</a>
+      <a href="?status=approved" class="btn-ghost {% if status=='approved' %}font-bold{% endif %}">Approved</a>
+      <a href="?status=rejected" class="btn-ghost {% if status=='rejected' %}font-bold{% endif %}">Rejected</a>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto bg-white/80 rounded-xl border">
+  <table class="w-full text-sm">
+    <thead class="bg-slate-100 text-xs uppercase text-slate-600">
+      <tr>
+        <th class="text-left p-3">Date</th>
+        <th class="text-left p-3">User</th>
+        <th class="text-left p-3">Plan</th>
+        <th class="text-left p-3">Amount</th>
+        <th class="text-left p-3">Txn Ref</th>
+        <th class="text-left p-3">Note</th>
+        <th class="text-left p-3">Status</th>
+        <th class="text-left p-3">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in payments %}
+      <tr class="border-t align-top">
+        <td class="p-3">{{ p.created_at.strftime('%d %b %Y %H:%M') }}</td>
+        <td class="p-3">
+          <div class="font-medium">{{ p.user.full_name }}</div>
+          <div class="text-xs text-slate-500">{{ p.user.email }}</div>
+          <div class="text-xs text-slate-500">{{ p.user.mobile_number }}</div>
+        </td>
+        <td class="p-3">{{ p.plan_name }}<br><span class="text-xs text-slate-500">{{ p.duration_days }} days</span></td>
+        <td class="p-3 font-bold">₹{{ '%.2f' % p.amount }}</td>
+        <td class="p-3 font-mono text-xs">{{ p.txn_ref }}</td>
+        <td class="p-3 text-xs">{{ p.payer_note or '' }}</td>
+        <td class="p-3">
+          {% if p.status == 'approved' %}<span class="pill pill-green">Approved</span>
+          {% elif p.status == 'rejected' %}<span class="pill pill-rose">Rejected</span>
+          {% else %}<span class="pill">Pending</span>{% endif %}
+        </td>
+        <td class="p-3">
+          {% if p.status == 'pending' %}
+          <form method="post" action="{{ url_for('premium.admin_action', pid=p.id, action='approve') }}" class="inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button class="px-2 py-1 rounded bg-emerald-600 text-white text-xs">Approve</button>
+          </form>
+          <form method="post" action="{{ url_for('premium.admin_action', pid=p.id, action='reject') }}" class="inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button class="px-2 py-1 rounded bg-rose-600 text-white text-xs">Reject</button>
+          </form>
+          {% else %}
+          <span class="text-xs text-slate-400">{{ p.reviewed_at.strftime('%d %b %H:%M') if p.reviewed_at else '' }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td class="p-4 text-slate-500" colspan="8">No payments.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

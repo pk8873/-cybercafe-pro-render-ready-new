@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Services{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between flex-wrap gap-2 mb-5">
+  <div>
+    <h1 class="text-3xl font-extrabold h-display">🧾 Services</h1>
+    <p class="text-slate-600 text-sm">All work submitted for your customers.</p>
+  </div>
+  <a href="{{ url_for('service.create') }}" class="btn-3d">+ New Service</a>
+</div>
+
+<form method="get" class="mb-4">
+  <select name="status" onchange="this.form.submit()" class="max-w-xs">
+    <option value="">All statuses</option>
+    {% for s in ['Pending','In Progress','Completed'] %}
+      <option {% if status==s %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<div class="card-3d overflow-x-auto p-1">
+<table class="table-3d">
+<thead><tr>
+<th>Customer</th><th>Type</th><th>Status</th><th>Amount</th><th>Submitted</th><th class="text-right pr-4">Actions</th>
+</tr></thead><tbody>
+{% for s in services %}
+<tr>
+  <td class="font-semibold">{{ s.customer.full_name }}</td>
+  <td>{{ s.service_type }}</td>
+  <td>
+    <span class="pill
+      {% if s.status=='Completed' %}pill-green
+      {% elif s.status=='Pending' %}pill-amber
+      {% else %}pill-blue{% endif %}">{{ s.status }}</span>
+  </td>
+  <td>₹{{ '%.2f'|format(s.amount or 0) }}</td>
+  <td>{{ s.submission_date.strftime('%d %b %Y') }}</td>
+  <td class="text-right pr-4">
+    <div class="inline-flex gap-1">
+      <a href="{{ url_for('service.edit', sid=s.id) }}" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-sky-50 text-sky-700 hover:bg-sky-100">Edit</a>
+      <form action="{{ url_for('service.delete', sid=s.id) }}" method="post" class="inline" onsubmit="return confirm('Delete this service?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100">Delete</button>
+      </form>
+    </div>
+  </td>
+</tr>
+{% else %}
+<tr><td colspan="6" class="p-10 text-center text-slate-400">No services yet. <a href="{{ url_for('service.create') }}" class="text-indigo-600 font-semibold">Add one →</a></td></tr>
+{% endfor %}
+</tbody></table>
+</div>
+{% endblock %}

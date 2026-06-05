@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ title or 'Unauthorized action' }}{% endblock %}
+{% block content %}
+<div class="max-w-xl mx-auto mt-10">
+  <div class="card-3d p-8 text-center">
+    <div class="text-6xl float-slow">🚫</div>
+    <h1 class="mt-3 text-2xl font-extrabold h-display">{{ title or 'Unauthorized action blocked' }}</h1>
+    <p class="mt-2 text-slate-600">{{ desc or "You don't have permission to do that. Nothing was changed and the app is still running — you can keep using it normally." }}</p>
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-2">
+      <a href="javascript:history.back()" class="btn-ghost">← Go back</a>
+      <a href="{{ url_for('dashboard.index') if current_user.is_authenticated and not current_user.is_admin else url_for('public.home') }}" class="btn-3d">Go to dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.LV && window.LV.toast) {
+      window.LV.toast(
+        {{ (title or 'Unauthorized action blocked')|tojson }},
+        {{ (desc or "You don't have permission to do that. The action was safely cancelled — the website is still running.")|tojson }},
+        'danger'
+      );
+    }
+  });
+</script>
+{% endblock %}

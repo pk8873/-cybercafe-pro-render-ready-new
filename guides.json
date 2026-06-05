@@ -1,0 +1,459 @@
+[
+  {
+    "slug": "aadhaar-update",
+    "name": "Aadhaar Card — New Enrolment & Update",
+    "shortName": "Aadhaar",
+    "category": "Identity",
+    "difficulty": "Easy",
+    "durationMins": 20,
+    "feeINR": "Free (new) · ₹50 (update)",
+    "officialUrl": "https://uidai.gov.in",
+    "emoji": "🪪",
+    "summary": "Apply for a new Aadhaar number or update your name, address, mobile, photo or biometrics through the UIDAI portal or your nearest Aadhaar Seva Kendra.",
+    "whoNeedsThis": [
+      "Every resident of India (including newborns)",
+      "People who changed name after marriage",
+      "Anyone shifted to a new address",
+      "Mobile number / email update applicants"
+    ],
+    "documents": [
+      "Proof of Identity (PAN, Voter ID, Passport, School ID)",
+      "Proof of Address (Electricity bill, Rent agreement, Bank passbook)",
+      "Proof of Date of Birth (Birth Certificate, 10th marksheet)",
+      "Original + photocopy of all documents"
+    ],
+    "steps": [
+      {
+        "title": "Open the UIDAI portal",
+        "detail": "Visit uidai.gov.in and choose 'Book an Appointment' under My Aadhaar.",
+        "tip": "Use Chrome or Edge for best compatibility."
+      },
+      {
+        "title": "Select city & Aadhaar Seva Kendra",
+        "detail": "Pick the nearest center. Avoid month-end Saturdays — they are usually crowded."
+      },
+      {
+        "title": "Fill applicant details",
+        "detail": "Enter mobile, name (as on documents), gender, DOB, address. Spelling must match supporting documents exactly.",
+        "tip": "Even a single missing initial can cause rejection."
+      },
+      {
+        "title": "Verify OTP",
+        "detail": "Enter the 6-digit OTP sent to your mobile to lock the appointment slot."
+      },
+      {
+        "title": "Pay the fee online (for updates)",
+        "detail": "₹50 for demographic updates, ₹100 for biometric updates. Save the receipt PDF."
+      },
+      {
+        "title": "Visit the center on the chosen date",
+        "detail": "Carry original documents + printout of the appointment slip. Biometrics will be captured (photo, fingerprint, iris)."
+      },
+      {
+        "title": "Collect the acknowledgement (URN)",
+        "detail": "Note the 14-digit Update Request Number. Track status at myaadhaar.uidai.gov.in."
+      }
+    ],
+    "commonMistakes": [
+      "Mismatching name spelling between Aadhaar form and ID proof",
+      "Using a mobile number you no longer own — OTPs will fail later",
+      "Submitting expired address proofs (older than 3 months for utility bills)"
+    ],
+    "faq": [
+      {
+        "q": "How long does an Aadhaar update take?",
+        "a": "Usually 7–30 days. You can track it using the URN on the UIDAI portal."
+      },
+      {
+        "q": "Can I update Aadhaar online without visiting?",
+        "a": "Yes — address can be updated online with a valid address proof. Biometrics and photo require a visit."
+      }
+    ]
+  },
+  {
+    "slug": "pan-card",
+    "name": "PAN Card — Form 49A (New / Reprint)",
+    "shortName": "PAN",
+    "category": "Tax",
+    "difficulty": "Easy",
+    "durationMins": 15,
+    "feeINR": "₹107 (India) · ₹1,017 (abroad)",
+    "officialUrl": "https://www.onlineservices.nsdl.com/paam/endUserRegisterContact.html",
+    "emoji": "💳",
+    "summary": "Apply for a new PAN card or reprint a lost one using NSDL (Protean) Form 49A. Required for bank accounts, salary, ITR and high-value transactions.",
+    "whoNeedsThis": [
+      "Anyone earning a taxable income",
+      "Students opening their first bank account",
+      "NRIs investing in Indian markets",
+      "Businesses applying for GST"
+    ],
+    "documents": [
+      "Aadhaar card (mandatory)",
+      "Proof of Date of Birth (Birth certificate / 10th marksheet)",
+      "Passport-size photo (white background)",
+      "Signature on white paper (black ink)"
+    ],
+    "steps": [
+      {
+        "title": "Visit NSDL / Protean portal",
+        "detail": "Go to onlineservices.nsdl.com → 'Apply Online' → Form 49A for Indian citizens."
+      },
+      {
+        "title": "Choose application type",
+        "detail": "Select 'New PAN — Indian Citizen (Form 49A)' and 'Individual' as category."
+      },
+      {
+        "title": "Fill personal details",
+        "detail": "Name MUST exactly match Aadhaar — no abbreviations, no extra spaces.",
+        "tip": "Father's name is mandatory even for married women."
+      },
+      {
+        "title": "Enter Aadhaar number",
+        "detail": "Tick the e-KYC + e-Sign option to skip physical document submission."
+      },
+      {
+        "title": "Add address & contact",
+        "detail": "Use a permanent address. Email and mobile must be active — OTPs are sent there."
+      },
+      {
+        "title": "Choose AO Code",
+        "detail": "Use the auto-suggest by entering your city + 'salaried/non-salaried'. AO code is your tax jurisdiction."
+      },
+      {
+        "title": "Upload photo & signature",
+        "detail": "Photo 213×213 px, signature 213×106 px, both under 100 KB in JPEG."
+      },
+      {
+        "title": "Pay the fee",
+        "detail": "₹107 via UPI / Debit Card / Net Banking. Save the receipt."
+      },
+      {
+        "title": "Aadhaar e-Sign",
+        "detail": "Verify via OTP on Aadhaar-linked mobile to e-sign the application."
+      },
+      {
+        "title": "Note the 15-digit acknowledgement",
+        "detail": "PAN is allotted in 7–15 days and emailed as e-PAN. Physical card arrives in ~3 weeks."
+      }
+    ],
+    "commonMistakes": [
+      "Name spelling mismatch with Aadhaar — leads to rejection",
+      "Uploading a selfie instead of a passport-style photo",
+      "Selecting the wrong AO code (causes future ITR routing issues)"
+    ],
+    "faq": [
+      {
+        "q": "Is e-PAN valid everywhere?",
+        "a": "Yes, the digitally signed e-PAN PDF is legally valid for all purposes including banking and ITR."
+      },
+      {
+        "q": "What if my PAN is lost?",
+        "a": "Apply for a 'Reprint of PAN' on the same NSDL portal for ₹50. Your PAN number stays the same."
+      }
+    ]
+  },
+  {
+    "slug": "passport",
+    "name": "Indian Passport — Fresh / Re-issue",
+    "shortName": "Passport",
+    "category": "Travel",
+    "difficulty": "Medium",
+    "durationMins": 40,
+    "feeINR": "₹1,500 (normal) · ₹3,500 (tatkal)",
+    "officialUrl": "https://www.passportindia.gov.in",
+    "emoji": "🛂",
+    "summary": "Apply for a fresh passport or re-issue an expiring one through Passport Seva. Includes booking an appointment at the nearest PSK / POPSK.",
+    "whoNeedsThis": [
+      "First-time applicants (students, workers, tourists)",
+      "Holders of expiring / damaged passports",
+      "Anyone needing change of name, address or appearance"
+    ],
+    "documents": [
+      "Aadhaar card",
+      "PAN card / Voter ID",
+      "Birth certificate or 10th marksheet (for DOB)",
+      "Address proof (Aadhaar/utility bill/rent agreement)",
+      "Old passport (for re-issue)"
+    ],
+    "steps": [
+      {
+        "title": "Register on Passport Seva",
+        "detail": "Create an account at passportindia.gov.in with a strong password."
+      },
+      {
+        "title": "Login and start a new application",
+        "detail": "Choose 'Apply for Fresh Passport / Re-issue of Passport'."
+      },
+      {
+        "title": "Fill the form online or download",
+        "detail": "Online filling is recommended — auto-saves and validates fields."
+      },
+      {
+        "title": "Enter applicant details",
+        "detail": "Fill name, family, address, references exactly as on Aadhaar.",
+        "tip": "References should be neighbours, not relatives."
+      },
+      {
+        "title": "Pay and schedule appointment",
+        "detail": "Pay fee online and book a slot at the nearest Passport Seva Kendra (PSK) or POPSK."
+      },
+      {
+        "title": "Print Application Receipt (ARN)",
+        "detail": "Take printout + originals + photocopies to the PSK on the appointment date."
+      },
+      {
+        "title": "Visit the PSK in 3 stages",
+        "detail": "Token → Counter A (verification) → Counter B (police info) → Counter C (granting officer)."
+      },
+      {
+        "title": "Police verification at home",
+        "detail": "Local police will visit within 14 days. Keep address proof and 2 photos ready."
+      },
+      {
+        "title": "Passport dispatched by Speed Post",
+        "detail": "Typically 15–30 days for normal, 3–7 days for tatkal."
+      }
+    ],
+    "commonMistakes": [
+      "Mismatched name across Aadhaar and 10th marksheet",
+      "Choosing references who live far away",
+      "Not carrying originals to the PSK appointment"
+    ],
+    "faq": [
+      {
+        "q": "Difference between PSK and POPSK?",
+        "a": "PSK is the main passport office. POPSK is a smaller centre run from a post office — same service, often less crowded."
+      },
+      {
+        "q": "Can a minor get a passport?",
+        "a": "Yes — both parents must sign Annexure D and accompany the child to the PSK."
+      }
+    ]
+  },
+  {
+    "slug": "voter-id",
+    "name": "Voter ID — Form 6 (New EPIC)",
+    "shortName": "Voter ID",
+    "category": "Identity",
+    "difficulty": "Easy",
+    "durationMins": 10,
+    "feeINR": "Free",
+    "officialUrl": "https://voters.eci.gov.in",
+    "emoji": "🗳️",
+    "summary": "Register as a new voter and get your EPIC card through the National Voters' Service Portal. Required to vote in Lok Sabha & Assembly elections.",
+    "whoNeedsThis": [
+      "Indian citizens aged 18+",
+      "People who shifted to a new constituency",
+      "First-time voters"
+    ],
+    "documents": [
+      "Aadhaar card",
+      "Proof of age (birth certificate / 10th marksheet)",
+      "Proof of ordinary residence (rent agreement / utility bill)",
+      "Passport-size photo"
+    ],
+    "steps": [
+      {
+        "title": "Visit voters.eci.gov.in",
+        "detail": "Sign up with your mobile and verify OTP."
+      },
+      {
+        "title": "Select Form 6",
+        "detail": "Choose 'Fill Form 6 — New Voter Registration'."
+      },
+      {
+        "title": "Choose state and constituency",
+        "detail": "Pick the state, district, and Assembly Constituency where you ordinarily reside."
+      },
+      {
+        "title": "Fill personal & family details",
+        "detail": "Name, DOB, gender, relative's name (father/mother/spouse). Use Aadhaar spelling."
+      },
+      {
+        "title": "Upload photo & documents",
+        "detail": "Photo under 2 MB. Birth/age proof and address proof as PDF/JPG."
+      },
+      {
+        "title": "Declaration & submit",
+        "detail": "Tick the citizenship and address declaration, then submit."
+      },
+      {
+        "title": "Track using reference number",
+        "detail": "BLO will verify your address in 2–4 weeks. EPIC is dispatched by post and digital e-EPIC is downloadable."
+      }
+    ],
+    "commonMistakes": [
+      "Applying in two constituencies — leads to rejection of both",
+      "Uploading a low-resolution photo",
+      "Forgetting to add Aadhaar (now mandatory under Form 6B)"
+    ],
+    "faq": [
+      {
+        "q": "Is Aadhaar mandatory for voter ID?",
+        "a": "It is now collected via Form 6B, but voter registration cannot be denied for not having Aadhaar."
+      },
+      {
+        "q": "Can I download e-EPIC?",
+        "a": "Yes — after approval, download the digitally signed e-EPIC PDF from the same portal."
+      }
+    ]
+  },
+  {
+    "slug": "ration-card",
+    "name": "Ration Card — NFSA Application",
+    "shortName": "Ration Card",
+    "category": "Welfare",
+    "difficulty": "Medium",
+    "durationMins": 25,
+    "feeINR": "₹5 – ₹45 (state-wise)",
+    "officialUrl": "https://nfsa.gov.in",
+    "emoji": "🍚",
+    "summary": "Apply for an APL / BPL / AAY ration card under the National Food Security Act to access subsidised foodgrains at your Fair Price Shop.",
+    "whoNeedsThis": [
+      "Families below the income threshold of their state",
+      "Newly married couples splitting from a joint card",
+      "Migrant workers (One Nation One Ration Card)"
+    ],
+    "documents": [
+      "Aadhaar of all family members",
+      "Proof of residence (electricity bill / rent agreement)",
+      "Income certificate from Tehsildar",
+      "Bank passbook copy",
+      "Passport-size photo of head of family"
+    ],
+    "steps": [
+      {
+        "title": "Visit your state's Food & Civil Supplies portal",
+        "detail": "Examples: epds.bihar.gov.in, fcs.up.gov.in, ahara.kar.nic.in."
+      },
+      {
+        "title": "Create login with mobile + OTP",
+        "detail": "Save the credentials — needed for renewals and member additions."
+      },
+      {
+        "title": "Choose application type",
+        "detail": "Select APL / BPL / AAY based on your annual family income."
+      },
+      {
+        "title": "Fill head-of-family details",
+        "detail": "Name, Aadhaar, gender, mobile, bank account (for DBT)."
+      },
+      {
+        "title": "Add each family member",
+        "detail": "Aadhaar, age, relationship. Children under 5 don't need biometrics."
+      },
+      {
+        "title": "Upload documents",
+        "detail": "Income certificate is the most rejected — make sure it's recent (within 6 months)."
+      },
+      {
+        "title": "Pay nominal fee and submit",
+        "detail": "Note the application reference number."
+      },
+      {
+        "title": "Field verification",
+        "detail": "An inspector visits within 30 days. Keep originals ready at home."
+      },
+      {
+        "title": "Download e-Ration Card",
+        "detail": "Once approved, download from the same portal and laminate it."
+      }
+    ],
+    "commonMistakes": [
+      "Submitting an old income certificate",
+      "Listing a member who is already on another family's card",
+      "Wrong category (APL vs BPL) leading to ineligibility for free grains"
+    ],
+    "faq": [
+      {
+        "q": "What is One Nation One Ration Card?",
+        "a": "Migrants can collect grains from any Fair Price Shop in India using the same Aadhaar-linked card."
+      },
+      {
+        "q": "How do I add a newborn?",
+        "a": "Use the 'Add Member' option after the child has a birth certificate and Aadhaar."
+      }
+    ]
+  },
+  {
+    "slug": "driving-licence",
+    "name": "Driving Licence — Learner & Permanent (Form 2 / 4)",
+    "shortName": "Driving Licence",
+    "category": "Driving",
+    "difficulty": "Medium",
+    "durationMins": 30,
+    "feeINR": "₹200 (LL) · ₹716 (DL)",
+    "officialUrl": "https://parivahan.gov.in",
+    "emoji": "🚗",
+    "summary": "Apply for a Learner's Licence and then a Permanent Driving Licence via Parivahan Sarathi. Includes online test slot booking.",
+    "whoNeedsThis": [
+      "18+ for car / motorcycle with gear",
+      "16+ for motorcycle without gear (≤50cc)",
+      "20+ for commercial / transport vehicles"
+    ],
+    "documents": [
+      "Aadhaar (for e-KYC)",
+      "Age proof (10th marksheet / Birth certificate)",
+      "Address proof (Aadhaar / utility bill)",
+      "Passport-size photo + signature",
+      "Form 1A (medical) — for 40+ or transport"
+    ],
+    "steps": [
+      {
+        "title": "Go to parivahan.gov.in/sarathiservice",
+        "detail": "Choose your state and click 'Apply for Learner Licence'."
+      },
+      {
+        "title": "Aadhaar e-KYC",
+        "detail": "Enter Aadhaar number, get OTP, fetch demographic details automatically."
+      },
+      {
+        "title": "Fill applicant details & vehicle class",
+        "detail": "MCWG (gear bike), LMV (car), MCWOG (scooter ≤50cc) etc."
+      },
+      {
+        "title": "Upload photo, signature & docs",
+        "detail": "JPEG under 200 KB each."
+      },
+      {
+        "title": "Pay fee online",
+        "detail": "₹200 for LL. Receipt is generated instantly."
+      },
+      {
+        "title": "Book LL test slot",
+        "detail": "Online slot at your RTO. The test is a 10-question rules quiz — practice on the Sarathi mock test."
+      },
+      {
+        "title": "Take the LL test",
+        "detail": "Pass with 6/10. LL is issued the same day as a downloadable PDF."
+      },
+      {
+        "title": "After 30 days, apply for permanent DL",
+        "detail": "Login again → Apply for DL → Choose slot for driving test."
+      },
+      {
+        "title": "Driving test at RTO",
+        "detail": "Bring your own / driving school vehicle. 8-figure test for two-wheelers, parallel parking & H-test for cars."
+      },
+      {
+        "title": "DL printed & couriered",
+        "detail": "Smart card DL reaches you in 15–20 days."
+      }
+    ],
+    "commonMistakes": [
+      "Booking the LL test the same day — slot needed in advance",
+      "Forgetting Form 1A medical certificate for 40+ applicants",
+      "Wrong vehicle class — can't switch easily without re-application"
+    ],
+    "faq": [
+      {
+        "q": "Can I skip driving school?",
+        "a": "Yes if you can drive. But many RTOs prefer accredited driving school certificates for first-timers."
+      },
+      {
+        "q": "How long is LL valid?",
+        "a": "6 months. You must apply for DL within this window."
+      }
+    ]
+  }
+]

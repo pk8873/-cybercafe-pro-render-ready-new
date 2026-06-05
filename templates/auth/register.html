@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="card-3d p-8">
+    <div class="text-center">
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-indigo-500 text-white text-xl shadow-lg">🚀</div>
+      <h1 class="text-2xl font-extrabold mt-3 h-display">Create your account</h1>
+      <p class="text-sm text-slate-500">14-day free trial · no card required</p>
+    </div>
+    <form method="post" class="mt-6 grid md:grid-cols-2 gap-4">
+      {{ form.hidden_tag() }}
+      {% for f in [form.full_name, form.shop_name, form.mobile_number, form.email, form.district, form.address, form.password, form.confirm] %}
+        <div class="field {% if f.name in ['address'] %}md:col-span-2{% endif %}">
+          <label>{{ f.label.text }}</label>
+          {{ f(class_="") }}
+          {% for e in f.errors %}<p class="text-xs text-rose-600 mt-1">{{ e }}</p>{% endfor %}
+        </div>
+      {% endfor %}
+      <button class="md:col-span-2 btn-3d justify-center py-3">Create my account →</button>
+    </form>
+    <p class="text-sm mt-4 text-center text-slate-600">Already have one? <a href="{{ url_for('auth.login') }}" class="text-indigo-600 font-semibold">Login</a></p>
+  </div>
+</div>
+{% endblock %}
